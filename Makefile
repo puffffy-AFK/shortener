@@ -31,6 +31,7 @@ db-create:
 	-tc "SELECT 1 FROM pg_database WHERE datname='$(DB_NAME)'" | grep -q 1 || \
 	PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -U $(DB_USER) -d postgres \
 	-c "CREATE DATABASE $(DB_NAME);"
+	
 # Миграции
 migrate:
 	psql postgres://user:password@localhost/shortener?sslmode=disable -f internal/client/db/migrations/001_init.sql

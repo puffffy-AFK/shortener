@@ -19,8 +19,7 @@ func Run(log *logger.Logger, dbConn *db.Database, cfg *config.Config) {
 
 	router := gin.Default()
 
-	registerRoutes(router, log, dbConn)
-
+	registerRoutes(router, log, dbConn, cfg)
 	srv := &http.Server{
 		Addr:    ":" + cfg.Server.Port,
 		Handler: router,
