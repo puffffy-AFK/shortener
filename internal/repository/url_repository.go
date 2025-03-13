@@ -5,7 +5,6 @@ import (
 
 	"gorm.io/gorm"
 )
-
 type URLRepository struct {
 	db *gorm.DB
 }

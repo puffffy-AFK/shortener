@@ -1,6 +1,6 @@
 server:
   host: "http://localhost"
-  port: 8080
+  port: 8082
 
 database:
   dsn: "postgres://user:password@localhost:5432/shortener?sslmode=disable"

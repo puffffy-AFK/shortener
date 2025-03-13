@@ -1,0 +1,109 @@
+definitions:
+  config.Config:
+    properties:
+      database:
+        properties:
+          dsn:
+            type: string
+        type: object
+      server:
+        properties:
+          host:
+            type: string
+          port:
+            type: string
+        type: object
+    type: object
+  model.CreateShortURLRequest:
+    description: Запрос содержит оригинальный URL, который нужно сократить.
+    properties:
+      url:
+        example: https://example.com/long-url
+        type: string
+    type: object
+  model.CreateShortURLResponse:
+    description: Ответ содержит сокращенный URL.
+    properties:
+      short_url:
+        example: http://localhost:8080/abc123
+        type: string
+    type: object
+  model.ErrorResponse:
+    description: Ответ содержит сообщение об ошибке.
+    properties:
+      error:
+        example: Invalid request
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /{shortCode}:
+    get:
+      description: Перенаправляет пользователя на оригинальный URL, соответствующий
+        короткому коду.
+      parameters:
+      - description: Короткий код
+        in: path
+        name: shortCode
+        required: true
+        type: string
+      responses:
+        "302":
+          description: Перенаправление на оригинальный URL
+        "404":
+          description: URL не найден
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Перенаправить по короткой ссылке
+      tags:
+      - links
+  /config:
+    get:
+      description: Возвращает текущую конфигурацию сервера, включая хост, порт и DSN
+        базы данных.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ с конфигурацией
+          schema:
+            $ref: '#/definitions/config.Config'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Получить конфигурацию сервера
+      tags:
+      - config
+  /shorten:
+    post:
+      consumes:
+      - application/json
+      description: Преобразует длинный URL в короткий код и сохраняет его в базе данных.
+      parameters:
+      - description: Длинный URL для сокращения
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateShortURLRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ с короткой ссылкой
+          schema:
+            $ref: '#/definitions/model.CreateShortURLResponse'
+        "400":
+          description: Неверный запрос
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Создать короткую ссылку
+      tags:
+      - links
+swagger: "2.0"

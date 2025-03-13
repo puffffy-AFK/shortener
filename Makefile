@@ -1,4 +1,4 @@
-.PHONY: run build fmt lint test migrate deps docker-up docker-down db-create
+.PHONY: run build fmt lint test migrate deps docker-up docker-down db-create swag
 
 # Переменные
 BIN=shortener
@@ -47,3 +47,7 @@ docker-up:
 # Остановка контейнеров
 docker-down:
 	docker-compose down
+
+# Генерация документации
+swag:
+	swag init -g cmd/http_server/main.go

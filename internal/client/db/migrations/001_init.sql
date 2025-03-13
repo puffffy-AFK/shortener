@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS urls (
     id SERIAL PRIMARY KEY,
     short_code TEXT UNIQUE NOT NULL,
