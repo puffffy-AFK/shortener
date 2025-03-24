@@ -22,24 +22,24 @@ import (
 // @Failure 500 {object} model.ErrorResponse "Ошибка сервера"
 // @Router /shorten [post]
 func shortenURLHandler(c *gin.Context, log *logger.Logger, dbConn *db.Database, cfg *config.Config) {
-    var req model.CreateShortURLRequest
+	var req model.CreateShortURLRequest
 
-    if err := c.ShouldBindJSON(&req); err != nil {
-        log.Error("Invalid request", err)
-        c.JSON(http.StatusBadRequest, model.ErrorResponse{Error: "Invalid request"})
-        return
-    }
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error("Invalid request", err)
+		c.JSON(http.StatusBadRequest, model.ErrorResponse{Error: "Invalid request"})
+		return
+	}
 
-    shortCode := generateShortCode(req.URL)
+	shortCode := generateShortCode(req.URL)
 
-    shortURL := fmt.Sprintf("%s:%s/%s", cfg.Server.Host, cfg.Server.Port, shortCode)
-    if err := dbConn.SaveURL(shortCode, req.URL); err != nil {
-        log.Error("Failed to save URL", err)
-        c.JSON(http.StatusInternalServerError, model.ErrorResponse{Error: "Failed to shorten URL"})
-        return
-    }
+	shortURL := fmt.Sprintf("%s:%s/%s", cfg.Server.Host, cfg.Server.Port, shortCode)
+	if err := dbConn.SaveURL(shortCode, req.URL); err != nil {
+		log.Error("Failed to save URL", err)
+		c.JSON(http.StatusInternalServerError, model.ErrorResponse{Error: "Failed to shorten URL"})
+		return
+	}
 
-    c.JSON(http.StatusOK, model.CreateShortURLResponse{ShortURL: shortURL})
+	c.JSON(http.StatusOK, model.CreateShortURLResponse{ShortURL: shortURL})
 }
 
 // @Summary Перенаправить по короткой ссылке

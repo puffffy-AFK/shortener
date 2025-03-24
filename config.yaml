@@ -3,7 +3,7 @@ server:
   port: 8082
 
 database:
-  dsn: "postgres://user:password@localhost:5432/shortener?sslmode=disable"
+  dsn: "postgres://user:password@db:5432/shortener?sslmode=disable"
 
 logger:
   level: "info"

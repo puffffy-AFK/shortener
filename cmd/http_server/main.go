@@ -34,7 +34,7 @@ func main() {
     r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
     go func() {
-        if err := r.Run(":8080"); err != nil {
+        if err := r.Run(":8081"); err != nil {
             log.Fatal("Failed to start server", err)
         }
     }()

@@ -2,7 +2,9 @@ package db
 
 import (
 	"fmt"
+	"errors"
 	"gorm.io/driver/postgres"
+	"shortener/internal/model"
 	"gorm.io/gorm"
 )
 
@@ -24,10 +26,13 @@ func (d *Database) SaveURL(shortCode, originalURL string) error {
 }
 
 func (d *Database) GetURL(shortCode string) (string, error) {
-	var originalURL string
-	err := d.DB.Raw("SELECT original_url FROM urls WHERE short_code = ?", shortCode).Scan(&originalURL).Error
-	if err != nil {
-		return "", err
+	var url model.URL
+	result := d.DB.Where("short_code = ?", shortCode).First(&url)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return "", fmt.Errorf("URL not found")
+		}
+		return "", fmt.Errorf("failed to retrieve URL: %w", result.Error)
 	}
-	return originalURL, nil
+	return url.OriginalURL, nil
 }
